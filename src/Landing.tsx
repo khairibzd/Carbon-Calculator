@@ -26,10 +26,10 @@ const LandingComponent = () => {
   };
 
   const electricityFactor = 0.3978; // Example factor for electricity emissions calculation
-  const transportationFactor = 9.087; // Example factor for transportation emissions calculation
+  // const transportationFactor = 9.087; // Example factor for transportation emissions calculation
   const kgCO2ePerYearFactor = 12; // Conversion factor for monthly to yearly emissions
   const airTravelFactorShortHaul = 100; // Example factor for short-haul flight emissions (adjust as needed)
-  const airTravelFactorMediumHaul = 200; // Example factor for medium-haul flight emissions (adjust as needed)
+  // const airTravelFactorMediumHaul = 200; // Example factor for medium-haul flight emissions (adjust as needed)
   const airTravelFactorLongHaul = 300; // Example factor for long-haul flight emissions (adjust as needed)
   const dietaryFactors: { [key: string]: number } = {
     Vegan: 200,
@@ -50,7 +50,7 @@ const LandingComponent = () => {
       electricityUsageKWh,
       transportationUsageGallonsPerMonth,
       flightsShortHaul,
-      flightsMediumHaul,
+      // flightsMediumHaul,
       flightsLongHaul,
       dietaryChoice,
     } = formData;
