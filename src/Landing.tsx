@@ -36,6 +36,13 @@ const LandingComponent = () => {
     Vegetarian: 400,
     Pescatarian: 600,
     MeatEater: 800,
+  }
+ 
+  const electricityFacto : { [key: string]: number } = {
+    'Less than 4 hours': 200,
+    'Between 4 and 8 hours': 400,
+    'Between 8 and 12 hours': 600,
+    'More than 12 hours': 800,
   };
 
   const calculateResults = () => {
@@ -52,12 +59,10 @@ const LandingComponent = () => {
     const electricityEmissions =
       parseFloat(electricityUsageKWh) * electricityFactor;
     const transportationEmissions =
-      parseFloat(transportationUsageGallonsPerMonth) * transportationFactor;
-
+    electricityFacto[transportationUsageGallonsPerMonth] || 0
     const airTravelEmissionsShortHaul =
       parseInt(flightsShortHaul) * airTravelFactorShortHaul;
-    const airTravelEmissionsMediumHaul =
-      parseInt(flightsMediumHaul) * airTravelFactorMediumHaul;
+  
     const airTravelEmissionsLongHaul =
       parseInt(flightsLongHaul) * airTravelFactorLongHaul;
 
@@ -65,7 +70,6 @@ const LandingComponent = () => {
 
     const totalAirTravelEmissions =
       airTravelEmissionsShortHaul +
-      airTravelEmissionsMediumHaul +
       airTravelEmissionsLongHaul;
 
     const yearlyElectricityEmissions =
@@ -182,7 +186,7 @@ const LandingComponent = () => {
           </h1>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-8 bg-gray-200 p-10 w-full max-w-screen-lg">
+        <div className="flex flex-col md:flex-col gap-8 bg-gray-200 p-10 w-full max-w-screen-lg">
           {/* Calculateur d'empreinte carbone (Calculatrice d'empreinte carbone) */}
           <div className="bg-white p-8 rounded-lg shadow-lg flex-1">
             <h1 className="text-3xl font-bold mb-6 text-center">
@@ -192,93 +196,119 @@ const LandingComponent = () => {
               {/* Champs de saisie (مجالات الإدخال) */}
               <div className="flex flex-col">
                 <label className="mb-2">
-                  🍽️ ️ Déchets générés par semaine (en kg) (كمية النفايات التي
-                  تنتجها أسبوعياً (بالكيلوجرام:))
-                </label>
-                <input
-                  type="number"
-                  name="electricityUsageKWh"
-                  value={formData.electricityUsageKWh}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-2"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="mb-2">
-                  🚗 Distance quotidienne de trajet domicile-travail (en
-                  km/mois) (مسافة الذهاب والعودة اليومية (بالكيلومتر):)
-                </label>
-                <input
-                  type="number"
-                  name="transportationUsageGallonsPerMonth"
-                  value={formData.transportationUsageGallonsPerMonth}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-2"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="mb-2">🧑‍✈️Vols courts (رحلات قصيرة):</label>
-                <input
-                  type="number"
-                  name="flightsShortHaul"
-                  value={formData.flightsShortHaul}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-2"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="mb-2">
                   {" "}
-                  Comment tes parents chauffent-ils la maison? (كيف يقوم والداك
-                  بتدفئة المنزل؟):
+                  Quelle moyenne de transport utilisez-vous ? (ما نوع وسيلة
+                  النقل التي تستخدمها؟)
                 </label>
                 <select
-                  name="dietaryChoice"
-                  value={formData.flightsLongHaul}
+                  name="transportChoice"
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
-                  <option value="Vegan">Gaz naturel (الغاز الطبيعي)</option>
-                  <option value="Vegetarian">Électricité (الكهرباء)</option>
-                  <option value="Pescatarian">Mazout (المازوت)</option>
-                  <option value="MeatEater">Bois (الخشب)</option>
+                  <option value="Train">
+                    probablement le train (ربما القطار)
+                  </option>
+                  <option value="Bicycle">
+                    J'apprécie également le vélo (أستمتع أيضًا بركوب الدراجة)
+                  </option>
+                  <option value="Walking">Marche à pied (المشي)</option>
+                  <option value="Car">Voiture personnelle (سيارة شخصية)</option>
                 </select>
               </div>
               <div className="flex flex-col">
                 <label className="mb-2">
-                  ️ 🍽️ Nombre de repas par jour (عدد الوجبات في اليوم):
-                </label>
-                <input
-                  type="number"
-                  name="flightsMediumHaul"
-                  value={formData.flightsMediumHaul}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-2"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="mb-2">
                   {" "}
-                  Commen tu rends-tu a l'école? (كيف تصل إلى المدرسة؟):
+                  Quelle distance as-tu parcourue ? (par semaine en km/h) (ما
+                  المسافة التي قطعتها؟ (في الأسبوع بالكيلومترات/الساعة)؟)
                 </label>
                 <select
-                  name="dietaryChoice"
-                  value={formData.flightsLongHaul}
+                  name="electricityUsageKWh"
+                  value={formData.electricityUsageKWh}
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
-                  <option value="Vegan">En voiture (بالسيارة)</option>
-                  <option value="Vegetarian">À pied (سيرًا على الأقدام)</option>
-                  <option value="Pescatarian">À vélo (بالدراجة)</option>
-                  <option value="MeatEater">
-                    Par les transports (مأكولات لحوم)
+                  <option value="10">10</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                  <option value="300">
+                    plus de 200 (أكثر من 200)
                   </option>
                 </select>
               </div>
               <div className="flex flex-col">
                 <label className="mb-2">
                   {" "}
-                  🍽️ Choix alimentaire (اختيار غذائي):
+                  Quel type de chauffage privilégiez-vous pour votre domicile en
+                  hiver ? (ما نوع التدفئة التي تفضلها لمنزلك في الشتاء؟)
+                </label>
+                <select
+                  name="heatingChoice"
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                >
+                  <option value="Central Heating">
+                    Chauffage central (التدفئة المركزية)
+                  </option>
+                  <option value="Electric Heating">
+                    Chauffage électrique (التدفئة الكهربائية)
+                  </option>
+                  <option value="Solar Heating">
+                    Chauffage solaire (تسخين الطاقة الشمسية)
+                  </option>
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-2">
+                  {" "}
+                  Combien d'heures par jour fonctionne votre chauffage ? (كم
+                  ساعة في اليوم يعمل نظام التدفئة الخاص بك؟)
+                </label>
+                <select
+                  name="transportationUsageGallonsPerMonth"
+                  value={formData.transportationUsageGallonsPerMonth}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                >
+                  <option value="Less than 4 hours">
+                    Moins de 4 heures par jour (أقل من 4 ساعات في اليوم)
+                  </option>
+                  <option value="Between 4 and 8 hours">
+                    Entre 4 et 8 heures par jour (بين 4 و 8 ساعات في اليوم)
+                  </option>
+                  <option value="Between 8 and 12 hours">
+                    Entre 8 et 12 heures par jour (بين 8 و 12 ساعة في اليوم)
+                  </option>
+                  <option value="More than 12 hours">
+                    Plus de 12 heures par jour (أكثر من 12 ساعة في اليوم)
+                  </option>
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-2">
+                  {" "}
+                  Comment chauffez-vous l'eau ? (كيف تقوم بتسخين الماء؟)
+                </label>
+                <select
+                  name="waterHeating"
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                >
+                  <option value="Electric Water Heater">
+                    À l'aide d'un chauffe-eau électrique (باستخدام سخان مياه
+                    كهربائي)
+                  </option>
+                  <option value="Solar Water Heater">
+                    En utilisant un système de chauffage solaire (باستخدام نظام
+                    تسخين مياه شمسي)
+                  </option>
+                  <option value="Gas Water Heater">
+                    chauffe-eau au gaz (سخان مياه غازي)
+                  </option>
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-2">
+                  ️ 🍽️ Choix alimentaire (اختيار غذائي):
                 </label>
                 <select
                   name="dietaryChoice"
@@ -296,6 +326,52 @@ const LandingComponent = () => {
                   </option>
                 </select>
               </div>
+              <div className="flex flex-col">
+                <label className="mb-2">
+                  ️ 🍽️ Nombre de repas par jour (عدد الوجبات في اليوم):
+                </label>
+                <input
+                  type="number"
+                  name="mealsPerDay"
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-2">
+                  ️ 🍽️ Combien de déchets par jour ? (كم عدد النفايات في اليوم؟)
+                </label>
+                <input
+                  type="number"
+                  name="wastePerDay"
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-2">
+                  ️  Courts vols (الرحلات القصيرة)
+                </label>
+                <input
+                  type="number"
+                  name="flightsShortHaul"
+                  value={formData.flightsShortHaul}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-2">️  Long vols (الرحلات الطويلة)</label>
+                <input
+                  type="number"
+                  name="flightsLongHaul"
+                  value={formData.flightsLongHaul}
+
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </div>
+
               <br />
               <div className="flex flex-col">
                 <button
@@ -350,10 +426,11 @@ const LandingComponent = () => {
             )}
           </div>
         </div>
-        <p className="text-xl font-bold bg-white rounded  mt-10 text-center text-black">
-          By @Khairi Bouzid
-        </p>
       </div>
+
+      {/* <p className="text-xl font-bold bg-white rounded  mt-10 text-center text-black">
+          By @Khairi Bouzid
+        </p> */}
     </>
   );
 };
