@@ -28,23 +28,23 @@ const LandingComponent = () => {
   const electricityFactor = 0.3978; // Example factor for electricity emissions calculation
   // const transportationFactor = 9.087; // Example factor for transportation emissions calculation
   const kgCO2ePerYearFactor = 12; // Conversion factor for monthly to yearly emissions
-  const airTravelFactorShortHaul = 100; // Example factor for short-haul flight emissions (adjust as needed)
+  const airTravelFactorShortHaul = 40; // Example factor for short-haul flight emissions (adjust as needed)
   // const airTravelFactorMediumHaul = 200; // Example factor for medium-haul flight emissions (adjust as needed)
-  const airTravelFactorLongHaul = 300; // Example factor for long-haul flight emissions (adjust as needed)
+  const airTravelFactorLongHaul = 50; // Example factor for long-haul flight emissions (adjust as needed)
   const dietaryFactors: { [key: string]: number } = {
-    Vegan: 200,
-    Vegetarian: 400,
-    Pescatarian: 600,
-    MeatEater: 800,
-  }
- 
-  const electricityFacto : { [key: string]: number } = {
-    'Less than 4 hours': 200,
-    'Between 4 and 8 hours': 400,
-    'Between 8 and 12 hours': 600,
-    'More than 12 hours': 800,
+    Vegan: 900,
+    Vegetarian: 520,
+    Pescatarian: 1400,
+    MeatEater: 2200,
   };
-
+  
+  const electricityFacto: { [key: string]: number } = {
+    'Less than 4 hours': 100,
+    'Between 4 and 8 hours': 40,
+    'Between 8 and 12 hours': 10,
+    'More than 12 hours': 250,
+  };
+  
   const calculateResults = () => {
     const {
       electricityUsageKWh,
@@ -54,35 +54,35 @@ const LandingComponent = () => {
       flightsLongHaul,
       dietaryChoice,
     } = formData;
-
+  
     // Adjusted calculation based on provided factors
     const electricityEmissions =
       parseFloat(electricityUsageKWh) * electricityFactor;
     const transportationEmissions =
-    electricityFacto[transportationUsageGallonsPerMonth] || 0
+      electricityFacto[transportationUsageGallonsPerMonth] || 0; // corrected variable name
     const airTravelEmissionsShortHaul =
       parseInt(flightsShortHaul) * airTravelFactorShortHaul;
   
     const airTravelEmissionsLongHaul =
       parseInt(flightsLongHaul) * airTravelFactorLongHaul;
-
+  
     const dietaryChoiceEmissions = dietaryFactors[dietaryChoice] || 0; // Default to 0 if choice not found
-
+  
     const totalAirTravelEmissions =
       airTravelEmissionsShortHaul +
       airTravelEmissionsLongHaul;
-
+  
     const yearlyElectricityEmissions =
       electricityEmissions * kgCO2ePerYearFactor;
     const yearlyTransportationEmissions =
       transportationEmissions * kgCO2ePerYearFactor;
-
+  
     const totalYearlyEmissions =
       yearlyElectricityEmissions +
       yearlyTransportationEmissions +
       totalAirTravelEmissions +
       dietaryChoiceEmissions;
-
+  
     return {
       yearlyElectricityEmissions,
       yearlyTransportationEmissions,
@@ -91,6 +91,7 @@ const LandingComponent = () => {
       totalYearlyEmissions,
     };
   };
+  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -201,18 +202,20 @@ const LandingComponent = () => {
                   النقل التي تستخدمها؟)
                 </label>
                 <select
-                  name="transportChoice"
+                  // name="transportChoice"
+                  name="transportationUsageGallonsPerMonth"
+                  value={formData.transportationUsageGallonsPerMonth}
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
-                  <option value="Train">
+                  <option value="Less than 4 hours">
                     probablement le train (ربما القطار)
                   </option>
-                  <option value="Bicycle">
+                  <option value="Between 4 and 8 hours">
                     J'apprécie également le vélo (أستمتع أيضًا بركوب الدراجة)
                   </option>
-                  <option value="Walking">Marche à pied (المشي)</option>
-                  <option value="Car">Voiture personnelle (سيارة شخصية)</option>
+                  <option value="Between 8 and 12 hours">Marche à pied (المشي)</option>
+                  <option value="More than 12 hours">Voiture personnelle (سيارة شخصية)</option>
                 </select>
               </div>
               <div className="flex flex-col">
@@ -222,15 +225,14 @@ const LandingComponent = () => {
                   المسافة التي قطعتها؟ (في الأسبوع بالكيلومترات/الساعة)؟)
                 </label>
                 <select
-                  name="electricityUsageKWh"
-                  value={formData.electricityUsageKWh}
+                 
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
-                  <option value="10">10</option>
-                  <option value="100">100</option>
+                  <option value="200">10</option>
+                  <option value="600">100</option>
                   <option value="200">200</option>
-                  <option value="300">
+                  <option value="2000">
                     plus de 200 (أكثر من 200)
                   </option>
                 </select>
@@ -242,18 +244,22 @@ const LandingComponent = () => {
                   hiver ? (ما نوع التدفئة التي تفضلها لمنزلك في الشتاء؟)
                 </label>
                 <select
-                  name="heatingChoice"
+                  name="electricityUsageKWh"
+                   value={formData.electricityUsageKWh}
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
-                  <option value="Central Heating">
+                  <option value="600">
                     Chauffage central (التدفئة المركزية)
                   </option>
-                  <option value="Electric Heating">
+                  <option value="1000">
                     Chauffage électrique (التدفئة الكهربائية)
                   </option>
-                  <option value="Solar Heating">
+                  <option value="300">
                     Chauffage solaire (تسخين الطاقة الشمسية)
+                  </option>
+                  <option value="100">
+                    Chauffage en bois (تدفئة بالحطب)
                   </option>
                 </select>
               </div>
@@ -264,8 +270,7 @@ const LandingComponent = () => {
                   ساعة في اليوم يعمل نظام التدفئة الخاص بك؟)
                 </label>
                 <select
-                  name="transportationUsageGallonsPerMonth"
-                  value={formData.transportationUsageGallonsPerMonth}
+                
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
@@ -289,7 +294,7 @@ const LandingComponent = () => {
                   Comment chauffez-vous l'eau ? (كيف تقوم بتسخين الماء؟)
                 </label>
                 <select
-                  name="waterHeating"
+                  // name="waterHeating"
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 >
@@ -332,7 +337,7 @@ const LandingComponent = () => {
                 </label>
                 <input
                   type="number"
-                  name="mealsPerDay"
+                  // name="mealsPerDay"
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 />
@@ -343,7 +348,7 @@ const LandingComponent = () => {
                 </label>
                 <input
                   type="number"
-                  name="wastePerDay"
+                  // name="wastePerDay"
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2"
                 />
